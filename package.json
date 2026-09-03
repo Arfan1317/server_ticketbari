@@ -1,0 +1,22 @@
+{
+  "name": "ticketbari-server",
+  "version": "1.0.0",
+  "description": "TicketBari server API",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "better-auth": "^0.6.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.8.0",
+    "mongoose": "^8.5.3",
+    "stripe": "^16.8.0"
+  }
+}
