@@ -18,22 +18,35 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.all('/api/auth/*splat', toNodeHandler(auth));
-
+// CORS must be applied FIRST — before everything, including BetterAuth
 app.use(cors({
     origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
-    credentials: true
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
 }));
+
+// BetterAuth handler — MUST be before express.json()
+// BetterAuth handles its own body parsing
+app.all('/api/auth/*', toNodeHandler(auth));
+
+// JSON body parser for our custom routes
 app.use(express.json());
 
-
-app.use('/api', authRoutes); 
-app.use('/api', userRoutes); 
+// Custom API routes
+app.use('/api', authRoutes);
+app.use('/api', userRoutes);
 app.use('/api/tickets', ticketRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/admin', adminRoutes);
 
+// Health check
+app.get('/', (req, res) => {
+    res.json({ message: 'TicketBari API is running' });
+});
+
+// Error handler
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).json({ message: 'Something went wrong!', error: err.message });
